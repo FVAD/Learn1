@@ -72,3 +72,8 @@ int main(){
     heap_sort(a, 14);
     print_array(a, 14);  
 }
+
+// 建堆复杂度O(N)
+// 维护复杂度O(logN)
+// 总复杂度O(NlogN)
+// 是不稳定的

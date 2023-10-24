@@ -1,12 +1,15 @@
 # include <iostream>
 using namespace std;
-// node* create(int array[], int n);
+
+//这个文件的学习目的是建立一个双向链表并实现常用的几个操作。
 
 struct node
 {
     int data;
     node* next=NULL;
+    node* previous = NULL;
 };
+
 
 int count_x(node* p, int x);
 void print_table(node* p);
@@ -15,6 +18,7 @@ void delete_key(node* head,int key);
 
 
 /**
+ * 这个函数应该不需要修改，因为遍历可以仅仅是单向的。
  * @param p 链表指针
  * @param x 定位元素
  * @return 计数器的值
@@ -35,24 +39,33 @@ int count_x(node* p, int x)
     return count;
 }
 
+/**
+ * 这个函数应该需要修改，虽然遍历可以仅仅是单向的（或者用并行？双向遍历到中间），但是要修改另外一个指针
+ * @param p 链表指针
+ * @param x 定位元素
+ * @return 计数器的值
+*/
 void delete_key(node* head, int key)
 {
-    node* p=head->next;	//p从第一个结点开始枚举
-    node* pre=head;			//pre 始终保存p的前驱结点的指针
-    while(p!=NULL)
+    node* pD=head->next;	//pD从第一个结点开始枚举
+    node* pre=head;	
+    node* pU=head->previous; // pU作为多出来的指针仅仅用于修改删除项的previous和改变下一个previous的指向
+    while(pD!=NULL)
     {
-		if(p->data==key)
+		if(pD->data==key)
         { 
-            //数据域恰好为 x，说明要删除该结点
-            pre->next=p->next;
-            delete p;
-            p=pre->next;
+            //数据域恰好为 key，说明要删除该结点
+            pre->next=pD->next; // 应该直接赋值即可（？
+            pU = pD->previous; //此时pD指向目标元素, pU指向目标元素的前一个元素
+            delete pD; //不释放pU是因为pU指向的元素不应该被删除
+            pD=pre->next;
+            pD->previous = pU;
         }
         else
         {
-            //数据域不是 x ，把 pre 和 p 都后移一位
-            pre=p;
-            p=p->next;
+            //数据域不是 key ，把 pre 和 p 都后移一位
+            pre=pD;
+            pD=pD->next;
         }
     }
 }
@@ -87,7 +100,7 @@ node* create(int array[], int n)
 {
 
     node *p, *pre, *head; //pre存储之前的节点
-    head = new node; // 因为没有1立刻赋值，这里使用动态分配内存的办法新建一个node对象;
+    head = new node; // 因为没有立刻赋值，这里使用动态分配内存的办法新建一个node对象;
     pre = head;
 
     for (size_t i = 0; i < n; i++)
@@ -96,6 +109,7 @@ node* create(int array[], int n)
         p->data = array[i];
         // p->next = NULL
         pre->next = p;
+        p->previous = pre; // 赋值给另外一个方向的指针
         pre = p; // 均是对地址的修改，因此不必考虑形式参数等等其他的影响。
     }
     return head;
@@ -137,13 +151,7 @@ int main()
         cout << o->data << endl;
         o = o->next;
     }
-    delete_key(L, 2);
-    cout << "----------\n";
-    for (int i = 0; i < n; i++)
-    {
-        cin >>  a[i];
-        cout << endl;
-    }
+    
     delete a;
 }
 

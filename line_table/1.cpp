@@ -90,7 +90,7 @@ node* create(int array[], int n)
     head = new node; // 因为没有1立刻赋值，这里使用动态分配内存的办法新建一个node对象;
     pre = head;
 
-    for (size_t i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
         p = new node; // 在头节点之后新建节点
         p->data = array[i];
@@ -139,10 +139,12 @@ int main()
     }
     delete_key(L, 2);
     cout << "----------\n";
-    for (int i = 0; i < n; i++)
+    cout << "以下为删除链表中存在的元素（以2为例）";
+    o = L->next; //next则指向下一个指针
+    while (o != NULL) // 打印链表的剩下的值
     {
-        cin >>  a[i];
-        cout << endl;
+        cout << o->data << endl;
+        o = o->next;
     }
     delete a;
 }
@@ -160,7 +162,7 @@ node* create1(int array[], int n)
     head = new node; // 因为没有立刻赋值，这里使用动态分配内存的办法新建一个node对象;
     pre = head;
     head->data = array[0]; // 直接对head的data进行赋值。此时main函数的node* o = L
-    for (size_t i = 1; i < n; i++)
+    for (int i = 1; i < n; i++)
     {
         p = new node; // 在头节点之后新建节点
         p->data = array[i];
